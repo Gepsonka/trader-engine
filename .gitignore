@@ -130,4 +130,4 @@ dmypy.json
 
 
 # Stock data
-/static/stocks/*
+stock_*
