@@ -32,7 +32,7 @@ class Strategy:
 
     def get_data(self):
         '''Get the data we downloaded into the static dir in json format. Sandbox mode is free but not the actual real data. Perfect
-            for testing and simulating purposes.'''
+        for testing and simulating purposes.'''
         with open('static/stocks/stock_'+self.stock_name+'.json','r') as jsonfile:
             data=json.loads(jsonfile.read())
             # Do not return inside the block because if the block does not end in execution the file will not be closed.
@@ -41,8 +41,8 @@ class Strategy:
 
     def fill_pandas_dataframe(self):
         '''Upload downloaded data into a pandas DataFrame. It will make the data much easier to work with.
-        Every strategy requires different columns in the dataframe.We have predefined which are the same at every strategy
-        and we have SPECIFIC_COLUMN_NAMES which will be defined as additional and specific column names for specific strategies.'''
+        Every strategy requires different columns in the dataframe. We have predefined which are the same at every strategy
+        and we have SPECIFIC_COLUMN_NAMES, which colums are different at every strategy.'''
         df = pd.DataFrame(columns=self.BASE_COLUMN_NAMES+self.SPECIFIC_COLUMN_NAMES)
         df_additional_row_data={}
         for name in self.SPECIFIC_COLUMN_NAMES:
@@ -56,6 +56,9 @@ class Strategy:
             df = df.append(ser, ignore_index=True)
         return df
 
-    def save_dataframe_json(self):
-        """Save ready dataframe in the proper json format. (I try to adapt to the apexchart's required dataformat)"""
-        pass
+    def save_dataframe(self):
+        """Save ready dataframe in the proper format (pickle). (I try to adapt to the apexchart's required dataformat)"""
+        self.dataframe.to_pickle('calculated_'+self.stock_name+'.pkl')
+    
+    def load_dataframe(self):
+        self.dataframe=pd.read_pickle('calculated_'+self.stock_name+'.pkl')
