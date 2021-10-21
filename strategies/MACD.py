@@ -102,22 +102,22 @@ class MACD(Strategy):
         if 'signal' not in self.dataframe.columns:
             raise AttributeError("No such columns as 'signal'")
 
-        if self.dataframe.at[index-1,'signal'] is np.NAN:
-            if self.dataframe.at[index-1,'MACD_SMA'] is np.NAN:
-                raise ValueError("Cannot calculate the signal here! day:"+index-1)
-            else:
-                EMA_yesterday=self.dataframe.at[index-1,'MACD_SMA']
-        else:
-            EMA_yesterday=self.dataframe.at[index-1,'signal']
-
         if short_term:
-            return self.ema(self.dataframe.at[index,"MACD"],9,EMA_yesterday)
-            
+            number_of_days=9
         else:
-            return self.ema(self.dataframe.at[index,"MACD"],40,EMA_yesterday)
+            number_of_days=40
+
+        if index>=number_of_days+1:
+            if pd.isnull(self.dataframe.at[index-1,'signal']):
+                EMA_yesterday=self.dataframe.at[index-1,'MACD_SMA']
+            else:
+                EMA_yesterday=self.dataframe.at[index-1,'signal']
+            today_EMA=self.ema(self.dataframe.at[index,'MACD'],number_of_days,EMA_yesterday)
+
+            return today_EMA
+        else:
+            raise ValueError(str(number_of_days)+' days must pass before you can calculate this signal')
         
-
-
 
 
 class ShortTermMACD(MACD):
@@ -154,15 +154,14 @@ class ShortTermMACD(MACD):
 
             if index>=26+1:
                 self.dataframe.at[index,'EMA26']=self.calc_EMA(26, index)
-                self.dataframe.at[index,'MACD']=self.calc_MACD(index)
+                self.dataframe.at[index,'MACD']=self.calc_MACD(index) # important to place it after the EMA calculation
 
             if index>=26+1+9:
                 self.dataframe.at[index,'MACD_SMA']=self.calc_MACD_SMA(index)
-                
+
             if index>=26+1+9:
                 self.dataframe.at[index,'signal']=self.calc_signal_line(index)
             
-        # print('EMAaaa26: '+str(self.dataframe.at[30,'EMA26']))
         print(self.dataframe)
 
     def implement(self):
