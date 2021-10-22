@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
+
 # Distribution / packaging
 .Python
 build/
@@ -131,3 +132,6 @@ dmypy.json
 
 # Stock data
 stock_*
+data/
+.vscode/
+.idea/
