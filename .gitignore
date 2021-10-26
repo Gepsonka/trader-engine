@@ -131,7 +131,7 @@ dmypy.json
 
 
 # Stock data
-stock_*
+stock_*.json
 data/
 .vscode/
 .idea/
