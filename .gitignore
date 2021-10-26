@@ -132,6 +132,7 @@ dmypy.json
 
 # Stock data
 stock_*.json
+*.pkl
 data/
 .vscode/
 .idea/

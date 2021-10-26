@@ -22,7 +22,7 @@ class Stock:
     BASE_URL = 'https://sandbox.iexapis.com/stable'
     API_TOKEN = os.environ.get('API_TOKEN')
 
-    def __init__(self,stock_name,period_of_time) -> None:
+    def __init__(self,stock_name,period_of_time='5y') -> None:
         self.stock_name=stock_name
         self.period_of_time=period_of_time
 
@@ -33,13 +33,16 @@ class Stock:
             raise ConnectionError('Cannot get the data from the server: '+ str(response.status_code) +', '+self.stock_name)
         else:
             return response.json()
+
     
-    def save_downloaded_data(self):
+    def save_downloaded_data(self,lock):
         """Write downloaded data into /static/stocks forder in stock_{stock name}.json format"""
-        with open('static/stocks/'+ self.period_of_time +'/stock_'+ self.stock_name +'.json','w') as jsonfile:
+        lock.acquire()
+        with open('static/stocks/stock_'+ self.stock_name +'.json','w') as jsonfile:
             try:
                 jsonfile.write(json.dumps(self.download_stock_data()))
             except:
                 raise IOError('Cannot write stock charts (OS error)')
             finally:
+                lock.release()
                 jsonfile.close()

@@ -30,6 +30,8 @@ class SaveDataImplementation:
         self.stock_class_list=[]
         self.thread_list=[]
 
+        self.lock=threading.Semaphore(5) # If you don't want your threading to be a mess use a semaphor
+
         self.read_csv_top500()
         self.divide_io()
         self.start_threads()
@@ -47,8 +49,7 @@ class SaveDataImplementation:
     def start_io_per_chunk(self,chunk):
         """Starts operations in the chunks"""
         for x in chunk:
-            x.download_stock_data()
-            x.save_downloaded_data()
+            x.save_downloaded_data(self.lock)
 
     def join_threads(self):
         for thread in self.thread_list:
@@ -62,11 +63,13 @@ class SaveDataImplementation:
 
     def start_threads(self):
         """Responsible for starting threads. Needs time delay between the start of threads, otherwise the requests 
-        would return with a plenty of 429 status code error (this way it does only return with a few 429 :D)"""
+        would return with a plenty of 429 status code error (this way it does only return with a few 429 :D)
+        We need to join the threads in order to have all the json files we need to calculate on them"""
         for index, thread in enumerate(self.thread_list):
             thread.start()
-            time.sleep(1)
-
+            time.sleep(0.3)
+            thread.join()
+        
 
 
 

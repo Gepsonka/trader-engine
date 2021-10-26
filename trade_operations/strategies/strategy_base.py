@@ -27,7 +27,7 @@ class Strategy(Stock):
     BASE_COLUMN_NAMES=['Date', 'Close value', 'high', 'low','Signal to buy','Signal to sell']
     SPECIFIC_COLUMN_NAMES=[]
     
-    def __init__(self, stock_name, period_of_time):
+    def __init__(self, stock_name, period_of_time='5y'):
         super().__init__(stock_name,period_of_time)
         # self.stock_name = stock_name  # what kind of stock: aapl, msft...
         # self.period_of_time = period_of_time # _y or _m or _mm or _d or max: given in a string
@@ -36,7 +36,7 @@ class Strategy(Stock):
     def get_data(self):
         '''Get the data we downloaded into the static dir in json format. Sandbox mode is free but not the actual real data. Perfect
         for testing and simulating purposes.'''
-        with open('static/stocks/'+ self.period_of_time +'/stock_'+self.stock_name+'.json','r') as jsonfile:
+        with open('static/stocks/stock_'+self.stock_name+'.json','r') as jsonfile:
             data=json.loads(jsonfile.read())
             # Do not return inside the block because if the block does not end in execution the file will not be closed.
         

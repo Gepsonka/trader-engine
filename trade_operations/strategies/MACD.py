@@ -15,7 +15,7 @@ if it crosses from the bottom we buy"""
 """Drawback of this strategy is sometimes even when a crossover occurs, the trend does not changes, therefore we lose."""
 
 class MACD(Strategy):
-    def __init__(self,stock_name,period_of_time):
+    def __init__(self,stock_name,period_of_time='5y'):
         super().__init__(stock_name,period_of_time)
 
     
@@ -151,15 +151,15 @@ class ShortTermMACD(MACD):
     '''
     SPECIFIC_COLUMN_NAMES=['SMA12','SMA26','EMA12','EMA26','MACD','MACD_SMA','signal']
 
-    def __init__(self,stock_name,period_of_time):
+    def __init__(self,stock_name,period_of_time='5y'):
         super().__init__(stock_name,period_of_time)
         self.chart=self.get_data()
         self.stock_name=stock_name
 
-        self.implement()
+        #self.implement()
     
     def calculate_data(self):
-        """Fill data with the calculated arguments, with the functions defined in the parent class."""
+        """Fill dataframe with the calculated arguments, with the functions defined in the parent class."""
         
         for index in range(len(self.dataframe.index)):
             if index>=12:
