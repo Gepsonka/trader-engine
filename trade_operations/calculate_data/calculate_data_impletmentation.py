@@ -11,6 +11,8 @@ from functools import partial
 MACD_MODE=0
 MEAN_REVERSION_MODE=1
 
+# TODO: comment up the file!!
+# TODO: divide the data loading and the calculations on the data into the two classes defined
 
 class ReadInstances:
     def __init__(self,mode=0) -> None:
@@ -39,7 +41,7 @@ class ReadInstances:
                 #shared_list.append(ShortTermMACD(x))
                 stock_class=ShortTermMACD(x)
                 stock_class.implement()
-                print("Stock has been processed successfully! "+stock_class.stock_name)
+                print("Stock has been loaded successfully! "+stock_class.stock_name)
             elif self.mode==1:
                 raise NotImplementedError("Only MACD strategy implemented yet!")
                 exit(-1)
