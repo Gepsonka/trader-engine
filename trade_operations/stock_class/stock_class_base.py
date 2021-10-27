@@ -38,7 +38,7 @@ class Stock:
     def save_downloaded_data(self,lock):
         """Write downloaded data into /static/stocks forder in stock_{stock name}.json format"""
         lock.acquire()
-        with open('static/stocks/stock_'+ self.stock_name +'.json','w') as jsonfile:
+        with open('static/stocks/'+ self.stock_name +'_stock.json','w') as jsonfile:
             try:
                 jsonfile.write(json.dumps(self.download_stock_data()))
             except:
@@ -46,3 +46,12 @@ class Stock:
             finally:
                 lock.release()
                 jsonfile.close()
+
+    def get_data(self):
+        '''Get the data we downloaded into the static dir in json format. Sandbox mode is free but not the actual real data. Perfect
+        for testing and simulating purposes.'''
+        with open('static/stocks/'+ self.stock_name +'_stock.json','r') as jsonfile:
+            data=json.loads(jsonfile.read())
+            # Do not return inside the block because if the block does not end in execution the file will not be closed.
+        
+        return data

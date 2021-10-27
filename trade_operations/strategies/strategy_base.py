@@ -33,15 +33,6 @@ class Strategy(Stock):
         # self.period_of_time = period_of_time # _y or _m or _mm or _d or max: given in a string
         self.dataframe=self.fill_pandas_dataframe()
 
-    def get_data(self):
-        '''Get the data we downloaded into the static dir in json format. Sandbox mode is free but not the actual real data. Perfect
-        for testing and simulating purposes.'''
-        with open('static/stocks/stock_'+self.stock_name+'.json','r') as jsonfile:
-            data=json.loads(jsonfile.read())
-            # Do not return inside the block because if the block does not end in execution the file will not be closed.
-        
-        return data
-
     def fill_pandas_dataframe(self):
         '''Upload downloaded data into a pandas DataFrame. It will make the data much easier to work with.
         Every strategy requires different columns in the dataframe. We have predefined which are the same at every strategy

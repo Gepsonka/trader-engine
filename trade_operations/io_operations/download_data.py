@@ -30,7 +30,7 @@ class SaveDataImplementation:
         self.stock_class_list=[]
         self.thread_list=[]
 
-        self.lock=threading.Semaphore(5) # If you don't want your threading to be a mess use a semaphor
+        self.lock=threading.Semaphore(7) # If you don't want your threading to be a mess use a semaphore
 
         self.read_csv_top500()
         self.divide_io()
