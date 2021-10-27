@@ -43,7 +43,7 @@ class SaveDataImplementation:
             self.stock_class_list.append(Stock(stocks.at[index,'Ticker'],self.time_interval))
 
     def chunks(self,lst, n):
-        """Divide stock_class_list innto chunks. Every thread will get a chunk (sublist) of Stock() instances."""
+        """Divide lst into n-sized chunks. Every thread will get a chunk (sublist) of Stock() instances."""
         for i in range(0, len(lst), n):
             yield lst[i:i + n]
     def start_io_per_chunk(self,chunk):
