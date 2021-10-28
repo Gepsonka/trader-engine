@@ -53,5 +53,7 @@ class Stock:
         with open('static/stocks/'+ self.stock_name +'_stock.json','r') as jsonfile:
             data=json.loads(jsonfile.read())
             # Do not return inside the block because if the block does not end in execution the file will not be closed.
-        
         return data
+
+    def load_dataframe(self):
+        self.dataframe=pd.read_pickle('static/ready_data/'+ self.period_of_time +'/calculated_'+self.stock_name+'.pkl')

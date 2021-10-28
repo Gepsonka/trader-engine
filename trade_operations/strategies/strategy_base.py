@@ -54,5 +54,4 @@ class Strategy(Stock):
         """Save ready dataframe in the proper format (pickle). (I try to adapt to the apexchart's required dataformat)"""
         self.dataframe.to_pickle('static/ready_data/'+ strategy +'/calculated_'+ self.stock_name +'.pkl')
     
-    def load_dataframe(self):
-        self.dataframe=pd.read_pickle('static/ready_data/'+ self.period_of_time +'/calculated_'+self.stock_name+'.pkl')
+    
