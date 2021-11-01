@@ -1,6 +1,7 @@
 import requests
 import os
 import json
+import pandas as pd
 
 
 class Stock:
@@ -55,5 +56,11 @@ class Stock:
             # Do not return inside the block because if the block does not end in execution the file will not be closed.
         return data
 
-    def load_dataframe(self):
-        self.dataframe=pd.read_pickle('static/ready_data/'+ self.period_of_time +'/calculated_'+self.stock_name+'.pkl')
+    def load_dataframe(self,strategy:str):
+        self.dataframe=pd.read_pickle(os.path.join('static/ready_data',strategy,"calculated_"+self.stock_name+'.pkl'))
+
+    def convert_calculated_data_to_json(self):
+        if not self.dataframe:
+            raise ValueError("Dataframe is empty")
+            exit(-1)
+        

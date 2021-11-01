@@ -14,7 +14,7 @@ MEAN_REVERSION_MODE=1
 # TODO: comment up the file!!
 # TODO: divide the data loading and the calculations on the data into the two classes defined
 
-class ReadInstances:
+class CalculateDataImplementation:
     '''Class wich reads into each json file with the corresponding stock name.
     This is done by all the cores of the processor, each subprocess connected to a IPC container (multiprocessing.Manager)
     The data load works but i dunno if the implementation will, bc yesterday my laptop almost cauth on fire processing all the data on
@@ -41,38 +41,19 @@ class ReadInstances:
     def read_data(self,chunk,shared_list):
         for x in chunk:
             if self.mode==0:
-                shared_list.append(ShortTermMACD(x))
+                #shared_list.append(ShortTermMACD(x))
+                cd=ShortTermMACD(x)
+                cd.implement()
                 print("Stock has been loaded successfully! "+ x)
             elif self.mode==1:
                 raise NotImplementedError("Only MACD strategy implemented yet!")
                 exit(-1)
-    def map_operations_to_processes(self):
+    def implement_data_read(self):
         #func_with_shared=partial(self.read_data,shared_list=self.shared_list)
         #self.process_pool.starmap(self.read_data,self.stock_name_chunks)
         for proc in self.process_pool:
             proc.start()
         proc.join()
-        
-
-class CalculateDataImplementation(ReadInstances):
-    """Calculating the dataframes on all of the dataclasses on all of the processor cores in subprocesses
-    data will be saved in ready_data/{strategy_identifier}/ dir"""
-    def __init__(self,mode) -> None:
-        super().__init__(mode)
-        self.shared_list_chunks=self.chunks(self.shared_list,mp.cpu_count())
-        self.implementiation_process_pool=[mp.Process(target=self.implement,args=(self.shared_list_chunks[i],self.shared_list)) for i in range(mp.cpu_count())]
-    
-    def calculate_on_data(self,lst):
-        for stock_class in lst:
-            stock_class.implement()
-            print("Calculations done on: "+stock_class.stock_name)
-
-    def implement(self):
-        for process in self.implementiation_process_pool:
-            process.start()
-        process.join()
-        
-    
     
 
 
