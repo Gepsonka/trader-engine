@@ -53,7 +53,7 @@ class CalculateDataImplementation:
         #self.process_pool.starmap(self.read_data,self.stock_name_chunks)
         for proc in self.process_pool:
             proc.start()
-        proc.join()
+        proc.join() 
     
 
 

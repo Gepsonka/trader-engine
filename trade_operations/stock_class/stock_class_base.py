@@ -2,7 +2,7 @@ import requests
 import os
 import json
 import pandas as pd
-
+import csv
 
 class Stock:
     """Represents a stock
@@ -26,6 +26,17 @@ class Stock:
     def __init__(self,stock_name,period_of_time='5y') -> None:
         self.stock_name=stock_name
         self.period_of_time=period_of_time
+
+    @classmethod
+    def get_all_stock_name(self):
+        stock_list=[]
+        with open('static/500stock.csv') as file:
+            csvfile=csv.reader(file)
+            next(csvfile) # We do not need the header
+            for row in csvfile:
+                stock_list.append(row[0])
+        return stock_list
+        
 
     def download_stock_data(self):
         """Download data from server"""
@@ -60,7 +71,19 @@ class Stock:
         self.dataframe=pd.read_pickle(os.path.join('static/ready_data',strategy,"calculated_"+self.stock_name+'.pkl'))
 
     def convert_calculated_data_to_json(self):
-        if not self.dataframe:
+        if self.dataframe.empty:
             raise ValueError("Dataframe is empty")
-            exit(-1)
+
+        stock_dict={}
+        for index in range(len(self.dataframe.index)):
+            stock_dict[self.dataframe.at[index,'Date']]={
+                'Close value':self.dataframe.at[index,'Close value'],
+                'Signal to buy': self.dataframe.at[index,'Signal to buy']==1,
+                'Signal to sell': self.dataframe.at[index,'Signal to sell']==1,
+
+            }
+        return stock_dict
+
+        
+
         

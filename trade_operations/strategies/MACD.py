@@ -18,11 +18,12 @@ class MACD(Strategy):
     def __init__(self,stock_name,period_of_time='5y'):
         super().__init__(stock_name,period_of_time)
 
-    
+    @classmethod
     def smoothing(self,number_of_days):
         """Smoothing formula used for calculating exponential moving averages (EMA)"""
         return 2/(number_of_days+1)
 
+    @classmethod
     def ema(self,price_today,number_of_days,EMA_yesterday):
         '''Formula of the Exponential Moving Average (EMA)'''
         return price_today*self.smoothing(number_of_days)+EMA_yesterday*(1-self.smoothing(number_of_days))
