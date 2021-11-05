@@ -7,6 +7,7 @@ from trade_operations.calculate_data.calculate_data_impletmentation import Calcu
 from trade_operations.stock_class.stock_class_base import Stock
 
 if __name__=='__main__':
-    z=CalculateDataImplementation(0)
-    z.implement_data_read()
+    x=CalculateDataImplementation(mode=1)
+    x.implement_data_read()
+    
     

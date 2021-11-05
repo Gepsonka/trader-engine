@@ -154,7 +154,7 @@ class ShortTermMACD(MACD):
 
     def __init__(self,stock_name,period_of_time='5y'):
         super().__init__(stock_name,period_of_time)
-        self.chart=self.get_data()
+        #self.chart=self.get_data()
         self.stock_name=stock_name
 
         #self.implement()

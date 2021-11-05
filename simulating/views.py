@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 import csv
 from trade_operations.stock_class.stock_class_base import Stock
+from trade_operations.strategies.strategy_base import Strategy
 # Create your views here.
 
 @api_view(['GET'])
@@ -19,10 +20,12 @@ def calculated_stock(request,stock_name,strategy):
         return Response({'error':'We do not have this stock'},status=status.HTTP_400_BAD_REQUEST)
     
     if strategy!='MACD' and strategy!='MeanReversion':
-        print(strategy=='MACD')
         return Response({'error':'We do not apply this strategy to the stocks'},status=status.HTTP_400_BAD_REQUEST)
 
     stock=Stock(stock_name)
     stock.load_dataframe(strategy)
 
-    return Response(stock.convert_calculated_data_to_json(),status=status.HTTP_200_OK)
+    if strategy=='MACD':
+        return Response(stock.convert_calculated_data_to_json(),status=status.HTTP_200_OK)
+    elif strategy=='MeanReversion':
+        return Response(stock.convert_calculated_data_to_json(1),status=status.HTTP_200_OK)

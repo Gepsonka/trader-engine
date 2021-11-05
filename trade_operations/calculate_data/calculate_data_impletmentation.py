@@ -5,6 +5,7 @@ import os
 import mmap
 from trade_operations.stock_class.stock_class_base import Stock
 from trade_operations.strategies.MACD import ShortTermMACD
+from trade_operations.strategies.MeanReversion import MeanReversion
 from itertools import product
 from functools import partial
 
@@ -27,7 +28,15 @@ class CalculateDataImplementation:
         self.manager=mp.Manager()
         self.shared_list=self.manager.list()
         self.process_pool=[mp.Process(target=self.read_data,args=(self.stock_name_chunks[i],self.shared_list)) for i in range(mp.cpu_count())]
+        self.create_dirs()
+
+    def create_dirs(self):
+        if not os.path.exists(os.path.join('static','ready_data','MACD')):
+            os.mkdir(os.path.join('static','ready_data','MACD'))
         
+        if not os.path.exists(os.path.join('static','ready_data','MeanReversion')):
+            os.mkdir(os.path.join('static','ready_data','MeanReversion'))
+
     def chunks(self,lst, n):
         """Divide lst into n-piece chunks."""
         splited = [lst[i::n] for i in range(n)]
@@ -44,10 +53,10 @@ class CalculateDataImplementation:
                 #shared_list.append(ShortTermMACD(x))
                 cd=ShortTermMACD(x)
                 cd.implement()
-                print("Stock has been loaded successfully! "+ x)
             elif self.mode==1:
-                raise NotImplementedError("Only MACD strategy implemented yet!")
-                exit(-1)
+                cd=MeanReversion(x)
+                cd.implement()
+            print("Stock has been loaded successfully! "+ x)
     def implement_data_read(self):
         #func_with_shared=partial(self.read_data,shared_list=self.shared_list)
         #self.process_pool.starmap(self.read_data,self.stock_name_chunks)
