@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 import multiprocessing as mp
 import os
+import signal
+import psutil
 from trade_operations.stock_class.stock_class_base import Stock
 from trade_operations.strategies.strategy_base import Strategy
 from trade_operations.io_operations.download_data import SaveDataImplementation
@@ -21,8 +23,9 @@ def get_all_stocks(request):
 
 @api_view(['GET'])
 def calculated_stock(request,stock_name,strategy):
-    if os.path.exists('static/pid.txt'): # FIXME: check pid and not that the file exists
-        return Response({'error':'Data is reloaded and recalculated...'})
+    '''Sending back the desired stock\'s data'''
+    if psutil.pid_exists(int(open('static/pid.txt').read().strip())):
+        return Response({'error':'Data is being reloaded and recalculated...'},status=403)
 
     if stock_name not in Stock.get_all_stock_name():
         return Response({'error':'We do not have this stock'},status=status.HTTP_400_BAD_REQUEST)
@@ -39,20 +42,23 @@ def calculated_stock(request,stock_name,strategy):
         return Response(stock.convert_calculated_data_to_json(1),status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+def kill_data_recalculation(request):
+    if not psutil.pid_exists(int(open('static/pid.txt').read().strip())):
+        return Response({'error':'Data recalculations is not in progress... Call simulating/reload-data/ endpoint to start one'})
+    else :
 
 
 @api_view(['GET'])
 def recalculate_data(request):
     def recalculate_data_proc():
-        #dwnld=SaveDataImplementation('5y')
-        #calc_MACD=CalculateDataImplementation()
+        dwnld=SaveDataImplementation('5y')
+        calc_MACD=CalculateDataImplementation()
         calc_MR=CalculateDataImplementation(1)
-        #calc_MACD.implement_data_read()
+        calc_MACD.implement_data_read()
         calc_MR.implement_data_read()
-        if os.path.exists('static/pid.txt'):
-            os.remove('static/pid.txt')
 
-    if os.path.exists('static/pid.txt'): # FIXME: check pid and not that the file exists
+    if psutil.pid_exists(int(open('static/pid.txt').read().strip())): # FIXME: check pid and not that the file exists
         return Response({'error':'Data is reloaded and recalculated...'})
     p=mp.Process(target=recalculate_data_proc)
     p.start()
