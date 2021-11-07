@@ -1,13 +1,9 @@
 import multiprocessing as mp
-from multiprocessing import process
-from itertools import repeat
 import os
-import mmap
-from trade_operations.stock_class.stock_class_base import Stock
 from trade_operations.strategies.MACD import ShortTermMACD
 from trade_operations.strategies.MeanReversion import MeanReversion
-from itertools import product
-from functools import partial
+
+
 
 MACD_MODE=0
 MEAN_REVERSION_MODE=1
@@ -25,9 +21,8 @@ class CalculateDataImplementation:
 
         self.stock_name_chunks=list(self.chunks(list(self.get_stock_names()),mp.cpu_count()))
 
-        self.manager=mp.Manager()
-        self.shared_list=self.manager.list()
-        self.process_pool=[mp.Process(target=self.read_data,args=(self.stock_name_chunks[i],self.shared_list)) for i in range(mp.cpu_count())]
+        
+        self.process_pool=[mp.Process(target=self.read_data,args=(self.stock_name_chunks[i],)) for i in range(mp.cpu_count())]
         self.create_dirs()
 
     def create_dirs(self):
@@ -47,15 +42,15 @@ class CalculateDataImplementation:
         for filename in os.listdir(path):
             yield filename.split('_')[0]
 
-    def read_data(self,chunk,shared_list):
+    def read_data(self,chunk):
         for x in chunk:
             if self.mode==0:
                 #shared_list.append(ShortTermMACD(x))
-                cd=ShortTermMACD(x)
-                cd.implement()
+                stock=ShortTermMACD(x)
+                stock.implement()
             elif self.mode==1:
-                cd=MeanReversion(x)
-                cd.implement()
+                stock=MeanReversion(x)
+                stock.implement()
             print("Stock has been loaded successfully! "+ x)
     def implement_data_read(self):
         #func_with_shared=partial(self.read_data,shared_list=self.shared_list)

@@ -4,5 +4,6 @@ from simulating import views
 
 urlpatterns = [
     path('all/',views.get_all_stocks),
-    path('<str:stock_name>/<str:strategy>/',views.calculated_stock)
+    path('<str:stock_name>/<str:strategy>/',views.calculated_stock),
+    path('reload-data/',views.recalculate_data),
 ]

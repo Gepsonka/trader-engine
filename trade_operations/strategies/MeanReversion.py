@@ -27,9 +27,9 @@ class MeanReversion(MACD):
                 elif self.dataframe.at[index-1,'SMA30']>self.dataframe.at[index-1,'SMA90'] and self.dataframe.at[index,'SMA30']<self.dataframe.at[index,'SMA90']:
                     self.dataframe.at[index,'Signal to buy']=1
                     self.dataframe.at[index,'Signal to sell']=0
-                elif self.dataframe.at[index-1,'SMA30']==self.dataframe.at[index-1,'SMA90']:
-                    self.dataframe.at[index,'Signal to buy']=0
-                    self.dataframe.at[index,'Signal to sell']=0
+                # elif self.dataframe.at[index-1,'SMA30']==self.dataframe.at[index-1,'SMA90']:
+                #     self.dataframe.at[index,'Signal to buy']=0
+                #     self.dataframe.at[index,'Signal to sell']=0
                 else:
                     self.dataframe.at[index,'Signal to buy']=0
                     self.dataframe.at[index,'Signal to sell']=0
