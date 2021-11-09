@@ -46,8 +46,8 @@ def calculated_stock(request,stock_name,strategy):
 def kill_data_recalculation(request):
     if not psutil.pid_exists(int(open('static/pid.txt').read().strip())):
         return Response({'error':'Data recalculations is not in progress... Call simulating/reload-data/ endpoint to start one'})
-    else :
-
+    else:
+        pass
 
 @api_view(['GET'])
 def recalculate_data(request):
